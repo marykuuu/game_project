@@ -93,7 +93,7 @@ def start():
     #     exit_list.add(exit)
     #     all_sprite_list.add(exit)
 
-    player = Player(400, 560)
+    player = Player(460, 560)
     player.walls = wall_list
     all_sprite_list.add(player)
     # player.exit = exit_list
