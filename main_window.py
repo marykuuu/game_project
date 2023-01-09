@@ -41,8 +41,8 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.top = block.rect.bottom
 
-            if pygame.sprite.spritecollide(self, self.exit, True):
-                self.end = True
+            # if pygame.sprite.spritecollide(self, self.exit, True):
+            #     self.end = True
 
 
 class Wall(pygame.sprite.Sprite):
@@ -125,10 +125,10 @@ def start():
     wall_list = pygame.sprite.Group()
 
     wall_coords = [
-        [0, 0, 640, 1],
+        [0, 640, 640, 1],
         [0, 1, 1, 640],
-        [640, 640, 640, 1],
-        [640, 640, 1, 640],
+        [0, 270, 640, 1],
+        [640, 0, 1, 640]
     ]
     for coord in wall_coords:
         wall = Wall(coord[0], coord[1], coord[2], coord[3])
@@ -138,7 +138,7 @@ def start():
 
 
     telescope = Telescope(320, 170, True)
-    player = Player(400, 560)
+    player = Player(460, 560)
     player.walls = wall_list
     all_sprite_list.add(player)
     all_sprite_list.add(telescope)
@@ -150,6 +150,7 @@ def start():
             if event.type == pygame.QUIT:
                 terminate()
                 return False
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     player.step_x = -20
