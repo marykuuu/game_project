@@ -40,8 +40,8 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.top = block.rect.bottom
 
-            if pygame.sprite.spritecollide(self, self.exit, True):
-                self.end = True
+            # if pygame.sprite.spritecollide(self, self.exit, True):
+            #     self.end = True
 
 
 # class Exit(pygame.sprite.Sprite):
@@ -76,10 +76,10 @@ def start():
     wall_list = pygame.sprite.Group()
 
     wall_coords = [
-        [0, 0, 640, 1],
+        [0, 640, 640, 1],
         [0, 1, 1, 640],
-        [640, 640, 640, 1],
-        [640, 640, 1, 640],
+        [0, 270, 640, 1],
+        [640, 0, 1, 640]
     ]
     for coord in wall_coords:
         wall = Wall(coord[0], coord[1], coord[2], coord[3])
