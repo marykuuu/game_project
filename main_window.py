@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.image = load_image(img, colorkey=-1)
         self.image = pygame.transform.scale(self.image, (50, 80))
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = x
         self.rect.y = y
         self.step_x = 0
@@ -44,17 +45,6 @@ class Player(pygame.sprite.Sprite):
                 self.end = True
 
 
-# class Exit(pygame.sprite.Sprite):
-#     def __init__(self, x, y, img='exit.png'):
-#         super().__init__()
-#         self.image = pygame.image.load(img).convert_alpha()
-#         self.image.set_colorkey((255, 255, 255))
-#         self.image = pygame.transform.scale(self.image, (60, 60))
-#         self.rect = self.image.get_rect()
-#         self.rect.x = x
-#         self.rect.x = y
-
-
 class Wall(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super().__init__()
@@ -64,6 +54,65 @@ class Wall(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+
+class Telescope(pygame.sprite.Sprite):
+
+
+    def __init__(self, x, y, flag, img='tele.png'):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (100, 200))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = flag
+
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
+
+
+
+class Player(pygame.sprite.Sprite):
+
+    def __init__(self, x, y, img='aaa.jpg'):
+        super().__init__()
+        self.image = load_image(img, colorkey=-1)
+        self.image = pygame.transform.scale(self.image, (50, 80))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.step_x = 0
+        self.step_y = 0
+        self.walls = None
+        self.exit = None
+        self.end = False
+
+    def update(self):
+        self.rect.x += self.step_x
+        blocks_list = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in blocks_list:
+            if self.step_x > 0:
+                self.rect.right = block.rect.left
+            else:
+                self.rect.left = block.rect.right
+
+        self.rect.y += self.step_y
+        blocks_list = pygame.sprite.spritecollide(self, self.walls, False)
+        for block in blocks_list:
+            if self.step_y > 0:
+                self.rect.bottom = block.rect.top
+            else:
+                self.rect.top = block.rect.bottom
+
+            if pygame.sprite.spritecollide(self, self.exit, True):
+                self.end = True
 
 
 def start():
@@ -86,17 +135,13 @@ def start():
         wall_list.add(wall)
         all_sprite_list.add(wall)
 
-    # exit_list = pygame.sprite.Group()
-    # exit_coords = [[540, 0]]
-    # for coord in exit_coords:
-    #     exit = Exit(coord[0], coord[1])
-    #     exit_list.add(exit)
-    #     all_sprite_list.add(exit)
 
+
+    telescope = Telescope(320, 170, True)
     player = Player(400, 560)
     player.walls = wall_list
     all_sprite_list.add(player)
-    # player.exit = exit_list
+    all_sprite_list.add(telescope)
 
     clock = pygame.time.Clock()
 
@@ -105,7 +150,6 @@ def start():
             if event.type == pygame.QUIT:
                 terminate()
                 return False
-
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     player.step_x = -20
@@ -134,6 +178,15 @@ def start():
             else:
                 pygame.quit()
                 return True
+            if pygame.sprite.collide_rect(player, telescope):
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    telescope.contact()
+                else:
+                    #нужно както написать чтобы не проходилось...
+                    pass
+
+
+
 
         pygame.display.flip()
         clock.tick(24)
