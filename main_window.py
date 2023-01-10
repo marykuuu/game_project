@@ -141,6 +141,26 @@ class Comp(pygame.sprite.Sprite):
             # делаем чтобы не тыкалось
             pass
 
+class Mini_table(pygame.sprite.Sprite):
+
+
+    def __init__(self, x, y, flag, img='mini_table.png'):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (150, 200))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = flag
+
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
 
 def start():
     pygame.init()
@@ -168,6 +188,7 @@ def start():
     bed = Bed(2, 220, True)
     comp = Comp(490, 160, True)
     table = Table(420, 210, True)
+    minitable = Mini_table(160, 200, True)
     player = Player(460, 560)
     player.walls = wall_list
     all_sprite_list.add(player)
@@ -175,6 +196,7 @@ def start():
     all_sprite_list.add(bed)
     all_sprite_list.add(table)
     all_sprite_list.add(comp)
+    all_sprite_list.add(minitable)
 
 
     carpet = load_image('carpet.png')
