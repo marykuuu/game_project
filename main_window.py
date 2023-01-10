@@ -187,7 +187,7 @@ def start():
                     pass
 
 
-
+#мя
 
         pygame.display.flip()
         clock.tick(24)
