@@ -76,43 +76,70 @@ class Telescope(pygame.sprite.Sprite):
             # делаем чтобы не тыкалось
             pass
 
+class Bed(pygame.sprite.Sprite):
 
 
-class Player(pygame.sprite.Sprite):
-
-    def __init__(self, x, y, img='aaa.jpg'):
+    def __init__(self, x, y, flag, img='bed.png'):
         super().__init__()
-        self.image = load_image(img, colorkey=-1)
-        self.image = pygame.transform.scale(self.image, (50, 80))
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (200, 300))
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = x
         self.rect.y = y
-        self.step_x = 0
-        self.step_y = 0
-        self.walls = None
-        self.exit = None
-        self.end = False
+        self.flag = flag
 
-    def update(self):
-        self.rect.x += self.step_x
-        blocks_list = pygame.sprite.spritecollide(self, self.walls, False)
-        for block in blocks_list:
-            if self.step_x > 0:
-                self.rect.right = block.rect.left
-            else:
-                self.rect.left = block.rect.right
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
 
-        self.rect.y += self.step_y
-        blocks_list = pygame.sprite.spritecollide(self, self.walls, False)
-        for block in blocks_list:
-            if self.step_y > 0:
-                self.rect.bottom = block.rect.top
-            else:
-                self.rect.top = block.rect.bottom
 
-            if pygame.sprite.spritecollide(self, self.exit, True):
-                self.end = True
+class Table(pygame.sprite.Sprite):
+
+
+    def __init__(self, x, y, flag, img='table.png'):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (220, 200))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = flag
+
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
+
+
+class Comp(pygame.sprite.Sprite):
+
+
+    def __init__(self, x, y, flag, img='comp.png'):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (130, 120))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = flag
+
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
 
 
 def start():
@@ -138,10 +165,23 @@ def start():
 
 
     telescope = Telescope(320, 170, True)
+    bed = Bed(2, 220, True)
+    comp = Comp(490, 160, True)
+    table = Table(420, 210, True)
     player = Player(460, 560)
     player.walls = wall_list
     all_sprite_list.add(player)
     all_sprite_list.add(telescope)
+    all_sprite_list.add(bed)
+    all_sprite_list.add(table)
+    all_sprite_list.add(comp)
+
+
+    carpet = load_image('carpet.png')
+    carpet = pygame.transform.scale(carpet, (370, 200))
+
+    books = load_image('books.png')
+    books = pygame.transform.scale(books, (80, 100))
 
     clock = pygame.time.Clock()
 
@@ -172,6 +212,8 @@ def start():
                     player.step_y = 0
 
             screen.blit(background_image, (0, 0))
+            screen.blit(carpet, (180, 350))
+            screen.blit(books, (80, 100))
 
             if not player.end:
                 all_sprite_list.update()
