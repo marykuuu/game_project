@@ -235,40 +235,7 @@ def start():
             if event.type == pygame.QUIT:
                 terminate()
                 return False
-
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    player.step_x = -20
-                    left = True
-                    right = False
-                    up = False
-                    down = False
-                elif event.key == pygame.K_RIGHT:
-                    player.step_x = 20
-                    left = False
-                    right = True
-                    up = False
-                    down = False
-                elif event.key == pygame.K_UP:
-                    player.step_y = -20
-                    left = False
-                    right = False
-                    up = True
-                    down = False
-                elif event.key == pygame.K_DOWN:
-                    player.step_y = 20
-                    left = False
-                    right = False
-                    up = False
-                    down = True
-                else:
-                    left = False
-                    right = False
-                    up = False
-                    down = False
-                    position_animation = 0
-
-            elif event.type == pygame.KEYUP:
+            if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
                     player.step_x = 0
                 elif event.key == pygame.K_RIGHT:
@@ -278,22 +245,73 @@ def start():
                 elif event.key == pygame.K_DOWN:
                     player.step_y = 0
 
-            screen.blit(background_image, (0, 0))
-            screen.blit(carpet, (180, 350))
-            screen.blit(books, (80, 100))
+        key = pygame.key.get_pressed()
+        if key[pygame.K_RIGHT]:
+            player.step_x = 10
+        if key[pygame.K_LEFT]:
+            player.step_x = -10
+        if key[pygame.K_UP]:
+            player.step_y = -10
+        if key[pygame.K_DOWN]:
+            player.step_y = 10
+            # elif event.type == pygame.KEYDOWN:
+            #     if event.key == pygame.K_LEFT:
+            #         player.step_x = -20
+            #         left = True
+            #         right = False
+            #         up = False
+            #         down = False
+            #     elif event.key == pygame.K_RIGHT:
+            #         player.step_x = 20
+            #         left = False
+            #         right = True
+            #         up = False
+            #         down = False
+            #     elif event.key == pygame.K_UP:
+            #         player.step_y = -20
+            #         left = False
+            #         right = False
+            #         up = True
+            #         down = False
+            #     elif event.key == pygame.K_DOWN:
+            #         player.step_y = 20
+            #         left = False
+            #         right = False
+            #         up = False
+            #         down = True
+            #     else:
+            #         left = False
+            #         right = False
+            #         up = False
+            #         down = False
+            #         position_animation = 0
+            #
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    player.step_x = 0
+                elif event.key == pygame.K_RIGHT:
+                    player.step_x = 0
+                elif event.key == pygame.K_UP:
+                    player.step_y = 0
+                elif event.key == pygame.K_DOWN:
+                    player.step_y = 0
 
-            if not player.end:
-                all_sprite_list.update()
-                all_sprite_list.draw(screen)
-            else:
-                pygame.quit()
-                return True
-            if pygame.sprite.collide_rect(player, telescope):
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    telescope.contact()
-                else:
-                    #нужно както написать чтобы не проходилось...
-                    pass
+        screen.blit(background_image, (0, 0))
+        screen.blit(carpet, (180, 350))
+        screen.blit(books, (80, 100))
+
+        if not player.end:
+            all_sprite_list.update()
+            all_sprite_list.draw(screen)
+        else:
+            pygame.quit()
+            return True
+            # if pygame.sprite.collide_rect(player, telescope):
+            #     if event.type == pygame.MOUSEBUTTONDOWN:
+            #         telescope.contact()
+            #     else:
+            #         #нужно както написать чтобы не проходилось...
+            #         pass
 
 
 #мяршрршршщр
