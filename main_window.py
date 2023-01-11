@@ -204,6 +204,8 @@ def start():
 
     books = load_image('books.png')
     books = pygame.transform.scale(books, (80, 100))
+    flower = load_image('flower.png', colorkey=-1)
+    flower = pygame.transform.scale(flower, (70, 150))
 
     clock = pygame.time.Clock()
 
@@ -236,6 +238,8 @@ def start():
             screen.blit(background_image, (0, 0))
             screen.blit(carpet, (180, 350))
             screen.blit(books, (80, 100))
+            screen.blit(flower, (20, 480))
+
 
             if not player.end:
                 all_sprite_list.update()
