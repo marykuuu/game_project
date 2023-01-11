@@ -1,5 +1,5 @@
 import pygame
-from main import terminate, load_image
+from main import terminate, load_image, cut_sheet
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -7,13 +7,23 @@ green = (0, 128, 0)
 screen_width = 640
 screen_height = 640
 
+left = False
+right = False
+up = False
+down = False
+
+
+
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, img='aaa.jpg'):
+    def __init__(self, x, y, img):
+        global player_image
+        global walk_up
         super().__init__()
-        self.image = load_image(img, colorkey=-1)
-        self.image = pygame.transform.scale(self.image, (50, 80))
+        self.image = img
+        self.k = 0
+        self.image = pygame.transform.scale(self.image, (120, 160))
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = x
@@ -43,6 +53,15 @@ class Player(pygame.sprite.Sprite):
 
             # if pygame.sprite.spritecollide(self, self.exit, True):
             #     self.end = True
+    def animation(self):
+        if self.k == 0:
+            pass
+        if self.k + 1 >= 24:
+            self.k = 0
+        if up:
+            self.image = walk_up[self.k // 2]
+            self.k += 1
+
 
 
 class Wall(pygame.sprite.Sprite):
@@ -170,6 +189,9 @@ def start():
     all_sprite_list = pygame.sprite.Group()
     wall_list = pygame.sprite.Group()
 
+    walk_up = cut_sheet(load_image('man_up.png'), 12, 1)
+    print(walk_up)
+
     wall_coords = [
         [0, 640, 640, 1],
         [0, 1, 1, 640],
@@ -184,12 +206,14 @@ def start():
         wall_list.add(wall)
         all_sprite_list.add(wall)
 
+
+
     telescope = Telescope(320, 170, True)
     bed = Bed(2, 220, True)
     comp = Comp(490, 160, True)
     table = Table(420, 210, True)
     minitable = Mini_table(160, 200, True)
-    player = Player(460, 560)
+    player = Player(380, 480, walk_up[0])
     player.walls = wall_list
     all_sprite_list.add(telescope)
     all_sprite_list.add(bed)
@@ -215,12 +239,34 @@ def start():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     player.step_x = -20
+                    left = True
+                    right = False
+                    up = False
+                    down = False
                 elif event.key == pygame.K_RIGHT:
                     player.step_x = 20
+                    left = False
+                    right = True
+                    up = False
+                    down = False
                 elif event.key == pygame.K_UP:
                     player.step_y = -20
+                    left = False
+                    right = False
+                    up = True
+                    down = False
                 elif event.key == pygame.K_DOWN:
                     player.step_y = 20
+                    left = False
+                    right = False
+                    up = False
+                    down = True
+                else:
+                    left = False
+                    right = False
+                    up = False
+                    down = False
+                    position_animation = 0
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
