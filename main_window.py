@@ -11,7 +11,19 @@ left = False
 right = False
 up = False
 down = False
+pos = 0
 
+
+def animation(k, list):
+    a = k
+    if k == 0:
+        pass
+    if k + 1 >= 24:
+        k = 0
+    else:
+        a = k
+        k += 1
+    return list[a // 2]
 
 
 
@@ -53,14 +65,7 @@ class Player(pygame.sprite.Sprite):
 
             # if pygame.sprite.spritecollide(self, self.exit, True):
             #     self.end = True
-    def animation(self):
-        if self.k == 0:
-            pass
-        if self.k + 1 >= 24:
-            self.k = 0
-        if up:
-            self.image = walk_up[self.k // 2]
-            self.k += 1
+
 
 
 
@@ -181,6 +186,7 @@ class Mini_table(pygame.sprite.Sprite):
 
 
 def start():
+    pos = 0
     pygame.init()
     screen = pygame.display.set_mode([screen_width, screen_height])
     background_image = load_image('fonn.png')
@@ -190,7 +196,6 @@ def start():
     wall_list = pygame.sprite.Group()
 
     walk_up = cut_sheet(load_image('man_up.png'), 12, 1)
-    print(walk_up)
 
     wall_coords = [
         [0, 640, 640, 1],
@@ -247,13 +252,38 @@ def start():
 
         key = pygame.key.get_pressed()
         if key[pygame.K_RIGHT]:
-            player.step_x = 10
+            player.step_x = 5
+            left = False
+            right = True
+            up = False
+            down = False
         if key[pygame.K_LEFT]:
-            player.step_x = -10
+            player.step_x = -5
+            left = True
+            right = False
+            up = False
+            down = False
+
         if key[pygame.K_UP]:
-            player.step_y = -10
+            player.step_y = -5
+            left = False
+            right = False
+            up = True
+            down = False
+            if pos + 1 >= 24:
+                pos = 0
+            if up:
+                player.image = walk_up[pos // 2]
+                pos += 1
+            # player.image = animation(pos, walk_up)
+            # print(animation(pos, walk_up))
+
         if key[pygame.K_DOWN]:
-            player.step_y = 10
+            player.step_y = 5
+            left = False
+            right = False
+            up = False
+            down = True
             # elif event.type == pygame.KEYDOWN:
             #     if event.key == pygame.K_LEFT:
             #         player.step_x = -20
@@ -286,15 +316,15 @@ def start():
             #         down = False
             #         position_animation = 0
             #
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    player.step_x = 0
-                elif event.key == pygame.K_RIGHT:
-                    player.step_x = 0
-                elif event.key == pygame.K_UP:
-                    player.step_y = 0
-                elif event.key == pygame.K_DOWN:
-                    player.step_y = 0
+            # if event.type == pygame.KEYUP:
+            #     if event.key == pygame.K_LEFT:
+            #         player.step_x = 0
+            #     elif event.key == pygame.K_RIGHT:
+            #         player.step_x = 0
+            #     elif event.key == pygame.K_UP:
+            #         player.step_y = 0
+            #     elif event.key == pygame.K_DOWN:
+            #         player.step_y = 0
 
         screen.blit(background_image, (0, 0))
         screen.blit(carpet, (180, 350))
