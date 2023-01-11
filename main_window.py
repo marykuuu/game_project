@@ -229,34 +229,35 @@ def start():
 
     all_sprite_list.add(player)
     clock = pygame.time.Clock()
+    playing = True
 
-    while True:
+    while playing:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                terminate()
-                return False
+                # terminate()
+                playing = False
 
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    player.step_x = -20
+                    player.step_x = -5
                     left = True
                     right = False
                     up = False
                     down = False
                 elif event.key == pygame.K_RIGHT:
-                    player.step_x = 20
+                    player.step_x = 5
                     left = False
                     right = True
                     up = False
                     down = False
                 elif event.key == pygame.K_UP:
-                    player.step_y = -20
+                    player.step_y = -5
                     left = False
                     right = False
                     up = True
                     down = False
                 elif event.key == pygame.K_DOWN:
-                    player.step_y = 20
+                    player.step_y = 5
                     left = False
                     right = False
                     up = False
@@ -287,13 +288,13 @@ def start():
                 all_sprite_list.draw(screen)
             else:
                 pygame.quit()
-                return True
-            if pygame.sprite.collide_rect(player, telescope):
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    telescope.contact()
-                else:
-                    #нужно както написать чтобы не проходилось...
-                    pass
+                playing = True
+            # if pygame.sprite.collide_rect(player, telescope):
+            #     if event.type == pygame.MOUSEBUTTONDOWN:
+            #         telescope.contact()
+            #     else:
+            #         #нужно както написать чтобы не проходилось...
+            #         pass
 
 
 #мяршрршршщр
