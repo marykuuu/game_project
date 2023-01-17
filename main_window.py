@@ -29,13 +29,17 @@ def animation(k, list):
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, img):
+    def __init__(self, x, y, sheet, columns, rows):
         global player_image
         global walk_up
         super().__init__()
-        self.image = img
+        # walk_down, walk_up, walk_right, walk_left
+        self.walk_pos = [[], [], [], []]
+        self.cut_sheet(sheet, columns, rows)
+        self.image = self.walk_pos[1][0]
         self.k = 0
-        self.image = pygame.transform.scale(self.image, (120, 160))
+        self.stand = 'up'
+        #self.image = pygame.transform.scale(self.image, (150, 200))
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = x
@@ -45,6 +49,7 @@ class Player(pygame.sprite.Sprite):
         self.walls = None
         self.exit = None
         self.end = False
+        self.pos = 0
 
     def update(self):
         self.rect.x += self.step_x
@@ -65,6 +70,63 @@ class Player(pygame.sprite.Sprite):
 
             # if pygame.sprite.spritecollide(self, self.exit, True):
             #     self.end = True
+
+    def cut_sheet(self, sheet, columns, rows):
+        rect = pygame.Rect(0, 0, sheet.get_width() // columns,
+                           sheet.get_height() // rows)
+        frames = []
+        for j in range(rows):
+            for i in range(columns):
+                frame_location = (rect.w * i, rect.h * j)
+                frames.append(sheet.subsurface(pygame.Rect(
+                    frame_location, rect.size)))
+
+
+
+        for i in range(len(frames)):
+            frame = pygame.transform.scale(frames[i], (150, 200))
+            if i <= 6:
+                self.walk_pos[0].append(frame)
+            elif i <= 13:
+                self.walk_pos[1].append(frame)
+            elif i <= 20:
+                self.walk_pos[2].append(frame)
+            elif i <= 27:
+                self.walk_pos[3].append(frame)
+    def animation(self, left, right, up, down):
+        #stand = 'up'
+
+        if self.pos + 1 >= 28:
+            self.pos = 0
+        if right:
+            self.image = pygame.transform.scale(self.walk_pos[2][self.pos // 4], (150, 200))
+            self.pos += 1
+            self.stand = 'right'
+        elif left:
+            self.image = pygame.transform.scale(self.walk_pos[3][self.pos // 4], (150, 200))
+            self.pos += 1
+            self.stand = 'left'
+        elif up:
+            self.image = pygame.transform.scale(self.walk_pos[1][self.pos // 4], (150, 200))
+            self.pos += 1
+            self.stand = 'up'
+        elif down:
+            self.image = pygame.transform.scale(self.walk_pos[0][self.pos // 4], (150, 200))
+            self.pos += 1
+            self.stand = 'down'
+        else:
+            if self.stand == 'up':
+                self.image = pygame.transform.scale(self.walk_pos[1][0], (150, 200))
+            elif self.stand == 'down':
+                self.image = pygame.transform.scale(self.walk_pos[0][0], (150, 200))
+            elif self.stand == 'right':
+                self.image = pygame.transform.scale(self.walk_pos[2][0], (150, 200))
+            elif self.stand == 'left':
+                self.image = pygame.transform.scale(self.walk_pos[3][0], (150, 200))
+            self.pos = 0
+
+
+
 
 
 
@@ -186,7 +248,6 @@ class Mini_table(pygame.sprite.Sprite):
 
 
 def start():
-    pos = 0
     pygame.init()
     screen = pygame.display.set_mode([screen_width, screen_height])
     background_image = load_image('fonn.png')
@@ -195,22 +256,21 @@ def start():
     all_sprite_list = pygame.sprite.Group()
     wall_list = pygame.sprite.Group()
 
-    walk_down, walk_up, walk_right, walk_left = [], [], [], []
-    pictures = cut_sheet(load_image('player.png'), 7, 4)
+    # walk_down, walk_up, walk_right, walk_left = [], [], [], []
+    # pictures = cut_sheet(load_image('player.png'), 7, 4)
+    #
+    # for i in range(len(pictures)):
+    #     if i <= 6:
+    #         walk_down.append(pictures[i])
+    #     elif i <= 13:
+    #         walk_up.append(pictures[i])
+    #     elif i <= 20:
+    #         walk_right.append(pictures[i])
+    #     elif i <= 27:
+    #         walk_left.append(pictures[i])
 
-    for i in range(len(pictures)):
-        if i <= 6:
-            walk_down.append(pictures[i])
-        elif i <= 13:
-            walk_up.append(pictures[i])
-        elif i <= 20:
-            walk_right.append(pictures[i])
-        elif i <= 27:
-            walk_left.append(pictures[i])
 
 
-
-    print(walk_down, walk_up, walk_right, walk_left)
 
     wall_coords = [
         [0, 640, 640, 1],
@@ -233,7 +293,8 @@ def start():
     comp = Comp(490, 160, True)
     table = Table(420, 210, True)
     minitable = Mini_table(160, 200, True)
-    player = Player(380, 480, walk_up[0])
+    #img = pygame.transform.scale(walk_up[0], (150, 200))
+    player = Player(360, 430, load_image('player.png'), 7, 4)
     player.walls = wall_list
     all_sprite_list.add(telescope)
     all_sprite_list.add(bed)
@@ -264,6 +325,12 @@ def start():
                     player.step_y = 0
                 elif event.key == pygame.K_DOWN:
                     player.step_y = 0
+                left = False
+                right = False
+                up = False
+                down = False
+                player.animation(left, right, up, down)
+
 
         key = pygame.key.get_pressed()
         if key[pygame.K_RIGHT]:
@@ -272,22 +339,15 @@ def start():
             right = True
             up = False
             down = False
-            if pos + 1 >= 28:
-                pos = 0
-            if right:
-                player.image = pygame.transform.scale(walk_right[pos // 4], (150, 200))
-                pos += 1
+            player.animation(left, right, up, down)
+
         if key[pygame.K_LEFT]:
             player.step_x = -5
             left = True
             right = False
             up = False
             down = False
-            if pos + 1 >= 28:
-                pos = 0
-            if left:
-                player.image = pygame.transform.scale(walk_left[pos // 4], (150, 200))
-                pos += 1
+            player.animation(left, right, up, down)
 
         if key[pygame.K_UP]:
             player.step_y = -5
@@ -295,13 +355,7 @@ def start():
             right = False
             up = True
             down = False
-            if pos + 1 >= 28:
-                pos = 0
-            if up:
-                player.image = pygame.transform.scale(walk_up[pos // 4], (150, 200))
-                pos += 1
-            # player.image = animation(pos, walk_up)
-            # print(animation(pos, walk_up))
+            player.animation(left, right, up, down)
 
         if key[pygame.K_DOWN]:
             player.step_y = 5
@@ -309,11 +363,22 @@ def start():
             right = False
             up = False
             down = True
-            if pos + 1 >= 28:
-                pos = 0
-            if down:
-                player.image = pygame.transform.scale(walk_down[pos // 4], (150, 200))
-                pos += 1
+            player.animation(left, right, up, down)
+
+        # if key[pygame.KEYUP]:
+        #     left = False
+        #     right = False
+        #     up = False
+        #     down = False
+        #     print(left, right, up, down)
+        #     player.animation(left, right, up, down)
+
+
+            # if pos + 1 >= 28:
+            #     pos = 0
+            # if down:
+            #     player.image = pygame.transform.scale(walk_down[pos // 4], (150, 200))
+            #     pos += 1
             # elif event.type == pygame.KEYDOWN:
             #     if event.key == pygame.K_LEFT:
             #         player.step_x = -20
