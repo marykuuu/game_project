@@ -138,6 +138,7 @@ class Wall(pygame.sprite.Sprite):
         self.image = pygame.Surface([width, height])
         self.image.fill(black)
         self.rect = self.image.get_rect()
+        self.image.set_alpha(0)
         self.rect.x = x
         self.rect.y = y
 
@@ -275,11 +276,10 @@ def start():
     wall_coords = [
         [0, 640, 640, 1],
         [0, 1, 1, 640],
-        [0, 270, 640, 1],
         [640, 0, 1, 640],
-        [0, 310, 640, 1],
-        [160, 270, 1, 150],
-        [0, 420, 160, 1]
+        [610, 200, 1, 100],
+        [0, 200, 640, 1],
+        [0, 310, 100, 1]
     ]
     for coord in wall_coords:
         wall = Wall(coord[0], coord[1], coord[2], coord[3])
