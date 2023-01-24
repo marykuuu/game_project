@@ -30,7 +30,7 @@ BLUERECT = pygame.Rect(XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, YMARGIN, BUTTONSIZE
 REDRECT = pygame.Rect(XMARGIN, YMARGIN + BUTTONSIZE + BUTTONGAPSIZE, BUTTONSIZE, BUTTONSIZE)
 GREENRECT = pygame.Rect(XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, YMARGIN + BUTTONSIZE + BUTTONGAPSIZE, BUTTONSIZE, BUTTONSIZE)
 
-def main():
+def memory_stars():
     global FPSCLOCK, DISPLAYSURF, BASICFONT, BEEP1, BEEP2, BEEP3, BEEP4
 
     pygame.init()
@@ -55,7 +55,9 @@ def main():
     score = 0
     waitingForInput = False
 
-    while score != 5:
+    running = True
+
+    while running:
         clickedButton = None
         DISPLAYSURF.fill(bgColor)
         drawButtons()
@@ -68,10 +70,22 @@ def main():
         DISPLAYSURF.blit(infoSurf, infoRect)
 
         checkForQuit()
-        for event in pygame.event.get():
-            if event.type == MOUSEBUTTONUP:
-                mousex, mousey = event.pos
-                clickedButton = getButtonClicked(mousex, mousey)
+
+        # if score == 5:
+        #     return 1
+        if score == 5:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE and score == 5:
+                        return 1
+        else:
+
+            for event in pygame.event.get():
+                if event.type == MOUSEBUTTONUP:
+                    mousex, mousey = event.pos
+                    clickedButton = getButtonClicked(mousex, mousey)
+
+
 
 
         if not waitingForInput:
@@ -105,6 +119,11 @@ def main():
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
+    # for event in pygame.event.get():
+    #     if event.type == pygame.KEYDOWN:
+    #         if event.key == pygame.K_SPACE and score == 5:
+    #             return 1
+    #return 1
 
 
 def terminate():
@@ -197,4 +216,4 @@ def getButtonClicked(x, y):
 
 
 if __name__ == '__main__':
-    main()
+    print(memory_stars())
