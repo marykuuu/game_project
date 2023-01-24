@@ -1,6 +1,7 @@
 import pygame
 from main import terminate, load_image, cut_sheet
 from slidepuzzle import puzzle
+from game import memory_stars
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -158,8 +159,8 @@ class Telescope(pygame.sprite.Sprite):
 
     def contact(self):
         if self.flag:
-            # мини-игра
-            pass
+            if memory_stars() == 1:
+                self.flag = False
         if not self.flag:
             # делаем чтобы не тыкалось
             pass
@@ -336,6 +337,9 @@ def start():
                     if pygame.sprite.collide_rect(player, table):
                         #print(1)
                         table.contact()
+                    if pygame.sprite.collide_rect(player, telescope):
+                        #print(1)
+                        telescope.contact()
 
 
         key = pygame.key.get_pressed()
@@ -437,12 +441,6 @@ def start():
         else:
             pygame.quit()
             return True
-            # if pygame.sprite.collide_rect(player, telescope):
-            #     if event.type == pygame.MOUSEBUTTONDOWN:
-            #         telescope.contact()
-            #     else:
-            #         #нужно както написать чтобы не проходилось...
-            #         pass
 
 
 #мяршрршршщр
