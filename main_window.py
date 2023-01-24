@@ -1,5 +1,6 @@
 import pygame
 from main import terminate, load_image, cut_sheet
+from slidepuzzle import puzzle
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -199,8 +200,8 @@ class Table(pygame.sprite.Sprite):
 
     def contact(self):
         if self.flag:
-            # мини-игра
-            pass
+            if puzzle() == 1:
+                self.flag = False
         if not self.flag:
             # делаем чтобы не тыкалось
             pass
@@ -330,6 +331,11 @@ def start():
                 up = False
                 down = False
                 player.animation(left, right, up, down)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if pygame.sprite.collide_rect(player, table):
+                        #print(1)
+                        table.contact()
 
 
         key = pygame.key.get_pressed()
