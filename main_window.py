@@ -593,4 +593,5 @@ def start():
         clock.tick(28)
 
 
-start()
+if __name__ == '__main__':
+    print(start())

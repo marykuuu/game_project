@@ -95,4 +95,5 @@ def intro(k=1):
 
         pygame.display.flip()
 
-intro()
+if __name__ == '__main__':
+    print(intro())

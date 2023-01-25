@@ -6,7 +6,7 @@ def start_screen():
     pygame.init()
     size = width, height = 1050, 600
     screen = pygame.display.set_mode(size)
-    intro_text = ["TRY TO ESCAPE", "<tap to continue>"]
+    intro_text = ["TRY TO ESCAPE", "<нажмите, чтобы продолжить>"]
 
     fon = pygame.transform.scale(load_image('back.jpg'), (width, height))
     screen.blit(fon, (0, 0))

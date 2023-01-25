@@ -1,5 +1,5 @@
 import pygame
-from main import load_image, terminate
+from main import terminate
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -226,4 +226,5 @@ def labirint():
 
     # pygame.quit()
 
-print(labirint())
+if __name__ == '__main__':
+    print(labirint())
