@@ -420,9 +420,10 @@ def start():
                 player.animation(left, right, up, down)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
-                    if pygame.sprite.collide_rect(player, table):
+                    if pygame.sprite.collide_rect(player, comp):
                         comp.contact()
                         print('tab')
+
 
                         #table.contact()
                     if pygame.sprite.collide_rect(player, telescope):

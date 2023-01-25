@@ -8,7 +8,7 @@ screen_width = 780
 screen_height = 720
 
 
-class Player(pygame.sprite.Sprite):
+class MAN(pygame.sprite.Sprite):
 
     def __init__(self, x, y, img='man.png'):
         super().__init__()
@@ -171,7 +171,7 @@ def labirint():
         exit_list.add(exit)
         all_sprite_list.add(exit)
 
-    player = Player(300, 660)
+    player = MAN(300, 660)
     player.walls = wall_list
     all_sprite_list.add(player)
     player.exit = exit_list
