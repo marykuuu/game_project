@@ -1,5 +1,5 @@
 import pygame
-from main import terminate, load_image, cut_sheet
+from main import terminate, load_image
 from slidepuzzle import puzzle
 from game import memory_stars
 #from maze import labirint
@@ -17,16 +17,15 @@ down = False
 pos = 0
 
 
-def animation(k, list):
-    a = k
-    if k == 0:
-        pass
-    if k + 1 >= 24:
-        k = 0
-    else:
-        a = k
-        k += 1
-    return list[a // 2]
+def show_message(screen, sms): #выводит на экран сообщение при взаимодействии
+    font = pygame.font.Font(None, 25)
+    pygame.draw.rect(screen, 'black', [30, 500, 300, 100])
+
+    # Рисуем текст. "True" означает использовать сглаживание
+    # Black -- цвет текста. Следующая строка создает образ текста
+    # но не рисует его на экране.
+    text = font.render(sms, True, 'white')
+    screen.blit(text, [35, 505])
 
 
 
@@ -97,7 +96,7 @@ class Player(pygame.sprite.Sprite):
             elif i <= 27:
                 self.walk_pos[3].append(frame)
     def animation(self, left, right, up, down):
-        #stand = 'up'
+
 
         if self.pos + 1 >= 28:
             self.pos = 0
@@ -146,6 +145,40 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = y
 
 
+class Furniture(pygame.sprite.Sprite):
+    def __init__(self, x, y, width, height, img, name):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (width, height))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = True
+        self.k = 0
+        self.name = name
+
+    def contact(self):
+
+        if self.flag:
+            if self.k == 0:
+                self.k += 1
+            elif self.k == 1:
+                if self.name == 'comp':
+                    result = puzzle()
+                elif self.name == 'tele':
+                    result = memory_stars()
+                elif self.name == 'bed':
+                    result = 1
+                    pass
+                if result == 1:
+                    self.flag = False
+                    self.k += 1
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
+
+
 class Telescope(pygame.sprite.Sprite):
 
     def __init__(self, x, y, flag, img='tele.png'):
@@ -157,11 +190,17 @@ class Telescope(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.flag = flag
+        self.k = 0
 
-    def contact(self):
+    def contact(self, screen):
         if self.flag:
-            if memory_stars() == 1:
-                self.flag = False
+            if self.k == 0:
+                show_message(screen, 'miyy')
+                self.k += 1
+            elif self.k == 1:
+                if memory_stars() == 1:
+                    self.flag = False
+                    self.k += 1
         if not self.flag:
             # делаем чтобы не тыкалось
             pass
@@ -333,9 +372,9 @@ def start():
 
 
 
-    telescope = Telescope(320, 170, True)
-    bed = Bed(2, 220, True)
-    comp = Comp(490, 160, True)
+    telescope = Furniture(320, 170, 100, 200, 'tele.png', 'tele')
+    bed = Furniture(2, 220, 200, 300, 'bed.png', 'bed')
+    comp = Furniture(490, 160, 130, 120, 'comp.png', 'comp')
     table = Table(420, 210, True)
     minitable = Mini_table(160, 200, True)
     # door_out = Door1(600, 405, True)
@@ -382,17 +421,16 @@ def start():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if pygame.sprite.collide_rect(player, table):
-                        tablee = 1
-                        table.contact()
+                        comp.contact()
                         print('tab')
 
                         #table.contact()
                     if pygame.sprite.collide_rect(player, telescope):
                         print('tele')
-                        #telescope.contact()
-                    # if pygame.sprite.collide_rect(player, bed):
-                    #     print('bed')
-                    #     bed.contact()
+                        telescope.contact()
+                    if pygame.sprite.collide_rect(player, bed):
+                        print('bed')
+                        bed.contact()
 
 
         key = pygame.key.get_pressed()
@@ -404,7 +442,7 @@ def start():
             down = False
             player.animation(left, right, up, down)
 
-        if key[pygame.K_LEFT]:
+        elif key[pygame.K_LEFT]:
             player.step_x = -5
             left = True
             right = False
@@ -412,7 +450,7 @@ def start():
             down = False
             player.animation(left, right, up, down)
 
-        if key[pygame.K_UP]:
+        elif key[pygame.K_UP]:
             player.step_y = -5
             left = False
             right = False
@@ -420,7 +458,7 @@ def start():
             down = False
             player.animation(left, right, up, down)
 
-        if key[pygame.K_DOWN]:
+        elif key[pygame.K_DOWN]:
             player.step_y = 5
             left = False
             right = False
@@ -487,18 +525,30 @@ def start():
         screen.blit(background_image, (0, 0))
         screen.blit(carpet, (180, 350))
         screen.blit(books, (80, 100))
-        if tablee ==1:
-            left, top = 10, 10
-            BASICFONT = pygame.font.Font('freesansbold.ttf', 20)
 
-            # pygame.draw.rect(DISPLAYSURF, TILECOLOR, (left + adjx, top + adjy, TILESIZE, TILESIZE))
-            textSurf = BASICFONT.render(str(10204204), True, (100, 255, 255))
-            textRect = textSurf.get_rect()
-            screen.blit(textSurf, textRect)
+
+        # font = pygame.font.Font(None, 25)
+        #
+        # # Рисуем текст. "True" означает использовать сглаживание
+        # # Black -- цвет текста. Следующая строка создает образ текста
+        # # но не рисует его на экране.
+        # text = font.render("My text", True, black)
+        #
+        # # Рисуем изображение текста на экран в точке (250, 250)
+        # screen.blit(text, [250, 250])
+        #
+        # # Рисуем прямоугольник
+        # pygame.draw.rect(screen, 'black', [20, 20, 250, 100])
 
         if not player.end:
             all_sprite_list.update()
             all_sprite_list.draw(screen)
+            if telescope.k == 1:
+                show_message(screen, 'tele')
+            if bed.k == 1:
+                show_message(screen, 'bed')
+            if comp.k == 1:
+                show_message(screen, 'comp')
         else:
             pygame.quit()
             return True

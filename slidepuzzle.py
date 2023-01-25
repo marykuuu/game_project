@@ -25,7 +25,7 @@ GREEN = (0, 204, 0)
 
 BGCOLOR = DARKTURQUOISE
 TILECOLOR = GREEN
-TEXTCOLOR = WHITE
+TEXTCOLOR = BLACK
 BORDERCOLOR = BRIGHTBLUE
 BASICFONTSIZE = 20
 
@@ -68,15 +68,17 @@ def puzzle():
     mainBoard, solutionSeq = generateNewPuzzle(80)
     SOLVEDBOARD = getStartingBoard()  # a solved board is the same as the board in a start state.
     allMoves = []  # list of moves made from the solved configuration
+    solved = False
 
     while True:  # main game loop
         slideTo = None  # the direction, if any, a tile should slide
         msg = 'Click tile or press arrow keys to slide.'  # contains the message to show in the upper left corner.
         if mainBoard == SOLVEDBOARD:
             msg = 'Головоломка разгадана! Вы получили ЖЕЛЕЗНЫЙ ключ!'
+            solved = True
 
 
-        drawBoard(mainBoard, msg)
+        drawBoard(mainBoard, msg, solved)
 
         checkForQuit()
         for event in pygame.event.get():  # event handling loop
@@ -123,7 +125,7 @@ def puzzle():
             #         slideTo = DOWN
 
         if slideTo:
-            slideAnimation(mainBoard, slideTo, 'Click tile or press arrow keys to slide.', 8)  # show slide on screen
+            # slideAnimation(mainBoard, slideTo, 'Click tile or press arrow keys to slide.', 8)  # show slide on screen
             makeMove(mainBoard, slideTo)
             allMoves.append(slideTo)  # record the slide
         pygame.display.update()
@@ -228,17 +230,18 @@ def getSpotClicked(board, x, y):
     return (None, None)
 
 
-def drawTile(tilex, tiley, number, adjx=0, adjy=0):
+def drawTile(tilex, tiley, number, solved,  adjx=0, adjy=0):
     # draw a tile at board coordinates tilex and tiley, optionally a few
     # pixels over (determined by adjx and adjy)
     left, top = getLeftTopOfTile(tilex, tiley)
 
     DISPLAYSURF.blit(IMAGE[number - 1], (left + adjx, top + adjy))
     #pygame.draw.rect(DISPLAYSURF, TILECOLOR, (left + adjx, top + adjy, TILESIZE, TILESIZE))
-    textSurf = BASICFONT.render(str(number), True, TEXTCOLOR)
-    textRect = textSurf.get_rect()
-    textRect.center = left + int(TILESIZE / 2) + adjx, top + int(TILESIZE / 2) + adjy
-    DISPLAYSURF.blit(textSurf, textRect)
+    if not solved:
+        textSurf = BASICFONT.render(str(number), True, TEXTCOLOR)
+        textRect = textSurf.get_rect()
+        textRect.center = left + int(TILESIZE / 2) + adjx, top + int(TILESIZE / 2) + adjy
+        DISPLAYSURF.blit(textSurf, textRect)
     #здесть както картинку отображать
 
 
@@ -250,7 +253,7 @@ def makeText(text, color, bgcolor, top, left):
     return (textSurf, textRect)
 
 
-def drawBoard(board, message):
+def drawBoard(board, message, solved):
     DISPLAYSURF.fill(BGCOLOR)
     if message:
         textSurf, textRect = makeText(message, MESSAGECOLOR, BGCOLOR, 5, 5)
@@ -259,7 +262,7 @@ def drawBoard(board, message):
     for tilex in range(len(board)):
         for tiley in range(len(board[0])):
             if board[tilex][tiley]:
-                drawTile(tilex, tiley, board[tilex][tiley])
+                drawTile(tilex, tiley, board[tilex][tiley], solved)
 
     left, top = getLeftTopOfTile(0, 0)
     width = BOARDWIDTH * TILESIZE
@@ -270,30 +273,30 @@ def drawBoard(board, message):
     # DISPLAYSURF.blit(NEW_SURF, NEW_RECT)
     # DISPLAYSURF.blit(SOLVE_SURF, SOLVE_RECT)#
 
-
-def slideAnimation(board, direction, message, animationSpeed):
-    # Note: This function does not check if the move is valid.
-
-    blankx, blanky = getBlankPosition(board)
-    if direction == UP:
-        movex = blankx
-        movey = blanky + 1
-    elif direction == DOWN:
-        movex = blankx
-        movey = blanky - 1
-    elif direction == LEFT:
-        movex = blankx + 1
-        movey = blanky
-    elif direction == RIGHT:
-        movex = blankx - 1
-        movey = blanky
-
-    # prepare the base surface
-    drawBoard(board, message)
-    baseSurf = DISPLAYSURF.copy()
-    # draw a blank space over the moving tile on the baseSurf Surface.
-    moveLeft, moveTop = getLeftTopOfTile(movex, movey)
-    pygame.draw.rect(baseSurf, BGCOLOR, (moveLeft, moveTop, TILESIZE, TILESIZE))
+#
+# def slideAnimation(board, direction, message, animationSpeed):
+#     # Note: This function does not check if the move is valid.
+#
+#     blankx, blanky = getBlankPosition(board)
+#     if direction == UP:
+#         movex = blankx
+#         movey = blanky + 1
+#     elif direction == DOWN:
+#         movex = blankx
+#         movey = blanky - 1
+#     elif direction == LEFT:
+#         movex = blankx + 1
+#         movey = blanky
+#     elif direction == RIGHT:
+#         movex = blankx - 1
+#         movey = blanky
+#
+#     # prepare the base surface
+#     drawBoard(board, message)
+#     baseSurf = DISPLAYSURF.copy()
+#     # draw a blank space over the moving tile on the baseSurf Surface.
+#     moveLeft, moveTop = getLeftTopOfTile(movex, movey)
+#     pygame.draw.rect(baseSurf, BGCOLOR, (moveLeft, moveTop, TILESIZE, TILESIZE))
 
     # for i in range(0, TILESIZE, animationSpeed):
     #     # animate the tile sliding over
@@ -330,22 +333,22 @@ def generateNewPuzzle(numSlides):
     return (board, sequence)
 
 
-def resetAnimation(board, allMoves):
-    # make all of the moves in allMoves in reverse.
-    revAllMoves = allMoves[:]  # gets a copy of the list
-    revAllMoves.reverse()
-
-    for move in revAllMoves:
-        if move == UP:
-            oppositeMove = DOWN
-        elif move == DOWN:
-            oppositeMove = UP
-        elif move == RIGHT:
-            oppositeMove = LEFT
-        elif move == LEFT:
-            oppositeMove = RIGHT
-        slideAnimation(board, oppositeMove, '', animationSpeed=int(TILESIZE / 2))
-        makeMove(board, oppositeMove)
+# def resetAnimation(board, allMoves):
+#     # make all of the moves in allMoves in reverse.
+#     revAllMoves = allMoves[:]  # gets a copy of the list
+#     revAllMoves.reverse()
+#
+#     for move in revAllMoves:
+#         if move == UP:
+#             oppositeMove = DOWN
+#         elif move == DOWN:
+#             oppositeMove = UP
+#         elif move == RIGHT:
+#             oppositeMove = LEFT
+#         elif move == LEFT:
+#             oppositeMove = RIGHT
+#         slideAnimation(board, oppositeMove, '', animationSpeed=int(TILESIZE / 2))
+#         makeMove(board, oppositeMove)
 
 
 if __name__ == '__main__':
