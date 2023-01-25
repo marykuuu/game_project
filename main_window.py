@@ -157,12 +157,13 @@ class Furniture(pygame.sprite.Sprite):
         self.flag = True
         self.k = 0
         self.name = name
+        self.mess = -1
 
     def contact(self):
 
         if self.flag:
             if self.k == 0:
-                self.k += 1
+                self.k = 1
             elif self.k == 1:
                 if self.name == 'comp':
                     result = puzzle()
@@ -173,10 +174,12 @@ class Furniture(pygame.sprite.Sprite):
                     pass
                 if result == 1:
                     self.flag = False
-                    self.k += 1
-        if not self.flag:
-            # делаем чтобы не тыкалось
-            pass
+                    self.k = 2
+        else:
+            self.k = 3
+
+            self.mess = -self.mess
+
 
 
 class Telescope(pygame.sprite.Sprite):
@@ -423,15 +426,21 @@ def start():
                     if pygame.sprite.collide_rect(player, comp):
                         comp.contact()
                         print('tab')
+                    else:
+                        comp.k = 0
 
 
                         #table.contact()
                     if pygame.sprite.collide_rect(player, telescope):
                         print('tele')
                         telescope.contact()
+                    else:
+                        telescope.k = 0
                     if pygame.sprite.collide_rect(player, bed):
                         print('bed')
                         bed.contact()
+                    else:
+                        bed.k = 0
 
 
         key = pygame.key.get_pressed()
@@ -550,6 +559,13 @@ def start():
                 show_message(screen, 'bed')
             if comp.k == 1:
                 show_message(screen, 'comp')
+            if telescope.k == 3 and telescope.mess == 1:
+                print(telescope.mess)
+                show_message(screen, 'tele1')
+            if bed.k == 3 and bed.mess == 1:
+                show_message(screen, 'bed1')
+            if comp.k == 3 and comp.mess == 1:
+                show_message(screen, 'comp1')
         else:
             pygame.quit()
             return True
