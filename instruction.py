@@ -1,4 +1,4 @@
-import sqlite3
+
 import pygame
 
 from main import terminate, load_image
@@ -7,14 +7,15 @@ def instruct():
     pygame.init()
     size = width, height = 1050, 600
     screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('meowgame')
 
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
+    intro_text = ["ВАМ НЕОБХОДИМО ВЫБРАТЬСЯ ИЗ КОМНАТЫ", "для воссоединения с другом",
+                  "для передвижения используйте клавиши-стрелки на клавиатуре",
+                  "для взаимодействия с предметами - клавишу пробел",
+                  "<нажмите ПРОБЕЛ, чтобы начать>"]
 
-    fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
-    screen.blit(fon, (0, 0))
+    # fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
+    # screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 30)
     text_coord = 50
     for line in intro_text:
@@ -30,9 +31,10 @@ def instruct():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+
+                return 'play'
         pygame.display.flip()
 
-instruct()
+if __name__ == '__main__':
+    print(instruct())

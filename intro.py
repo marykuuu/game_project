@@ -8,6 +8,7 @@ def intro(k=1):
     pygame.init()
     size = width, height = 1050, 600
     screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('meowgame')
 
 
 

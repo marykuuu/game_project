@@ -6,6 +6,7 @@ def start_screen():
     pygame.init()
     size = width, height = 1050, 600
     screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('meowgame')
     intro_text = ["TRY TO ESCAPE", "<нажмите, чтобы продолжить>"]
 
     fon = pygame.transform.scale(load_image('back.jpg'), (width, height))
