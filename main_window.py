@@ -388,8 +388,7 @@ def start():
 
                         #table.contact()
                     if pygame.sprite.collide_rect(player, telescope):
-                        print('tele')
-                        #telescope.contact()
+                        telescope.contact()
                     # if pygame.sprite.collide_rect(player, bed):
                     #     print('bed')
                     #     bed.contact()
