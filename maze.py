@@ -1,5 +1,5 @@
 import pygame
-from main import terminate
+from main import load_image, terminate
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -211,14 +211,14 @@ def labirint():
 
             all_sprite_list.update()
             all_sprite_list.draw(screen)
-        else:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    terminate()
-                    return False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        return 1
+        # else:
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             terminate()
+        #             return False
+        #         if event.type == pygame.KEYDOWN:
+        #             if event.key == pygame.K_SPACE:
+        #                 return 1
 
 
         pygame.display.flip()
@@ -226,5 +226,4 @@ def labirint():
 
     # pygame.quit()
 
-if __name__ == '__main__':
-    print(labirint())
+print(labirint())
