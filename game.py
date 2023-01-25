@@ -1,9 +1,9 @@
 import random, sys, time, pygame
 from pygame.locals import *
 
-FPS = 30
-WINDOWWIDTH = 640
-WINDOWHEIGHT = 640
+fps = 30
+width = 640
+height = 640
 FLASHSPEED = 500
 FLASHDELAY = 200
 BUTTONSIZE = 200
@@ -22,8 +22,8 @@ YELLOW = (155, 155,   0)
 DARKGRAY = (40,  40,  40)
 bgColor = BLACK
 
-XMARGIN = int((WINDOWWIDTH - (2 * BUTTONSIZE) - BUTTONGAPSIZE) / 2)
-YMARGIN = int((WINDOWHEIGHT - (2 * BUTTONSIZE) - BUTTONGAPSIZE) / 2)
+XMARGIN = int((width - (2 * BUTTONSIZE) - BUTTONGAPSIZE) / 2)
+YMARGIN = int((height - (2 * BUTTONSIZE) - BUTTONGAPSIZE) / 2)
 
 YELLOWRECT = pygame.Rect(XMARGIN, YMARGIN, BUTTONSIZE, BUTTONSIZE)
 BLUERECT = pygame.Rect(XMARGIN + BUTTONSIZE + BUTTONGAPSIZE, YMARGIN, BUTTONSIZE, BUTTONSIZE)
@@ -35,13 +35,13 @@ def memory_stars():
 
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
-    DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    DISPLAYSURF = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Game')
 
     BASICFONT = pygame.font.Font('freesansbold.ttf', 16)
     infoSurf = BASICFONT.render('Наберите 5 очков и получите ключ', 1, DARKGRAY)
     infoRect = infoSurf.get_rect()
-    infoRect.topleft = (10, WINDOWHEIGHT - 25)
+    infoRect.topleft = (10, height - 25)
 
     # BEEP1 = pygame.mixer.Sound('beep1.ogg')
     # BEEP2 = pygame.mixer.Sound('beep2.ogg')
@@ -64,20 +64,20 @@ def memory_stars():
 
         scoreSurf = BASICFONT.render('Score: ' + str(score), 1, WHITE)
         scoreRect = scoreSurf.get_rect()
-        scoreRect.topleft = (WINDOWWIDTH - 100, 10)
+        scoreRect.topleft = (width - 100, 10)
         DISPLAYSURF.blit(scoreSurf, scoreRect)
 
         DISPLAYSURF.blit(infoSurf, infoRect)
 
         checkForQuit()
 
-        # if score == 5:
-        #     return 1
         if score == 5:
+            waitingForInput = True
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE and score == 5:
+                    if event.key == pygame.K_SPACE:
                         return 1
+                        running = False
         else:
 
             for event in pygame.event.get():
@@ -118,12 +118,12 @@ def memory_stars():
 
 
         pygame.display.update()
-        FPSCLOCK.tick(FPS)
-    # for event in pygame.event.get():
-    #     if event.type == pygame.KEYDOWN:
-    #         if event.key == pygame.K_SPACE and score == 5:
-    #             return 1
-    #return 1
+        FPSCLOCK.tick(fps)
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and score == 5:
+                return 1
+    return 1
 
 
 def terminate():
@@ -170,7 +170,7 @@ def flashButtonAnimation(color, animationSpeed=50):
             flashSurf.fill((r, g, b, alpha))
             DISPLAYSURF.blit(flashSurf, rectangle.topleft)
             pygame.display.update()
-            FPSCLOCK.tick(FPS)
+            FPSCLOCK.tick(fps)
     DISPLAYSURF.blit(origSurf, (0, 0))
 
 
@@ -199,7 +199,7 @@ def gameOverAnimation(color=WHITE, animationSpeed=50):
                 DISPLAYSURF.blit(flashSurf, (0, 0))
                 drawButtons()
                 pygame.display.update()
-                FPSCLOCK.tick(FPS)
+                FPSCLOCK.tick(fps)
 
 
 
