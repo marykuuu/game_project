@@ -20,6 +20,8 @@ IRON_KEY = False
 SILVER_KEY = False
 GOLDEN_KEY = False
 
+MESSAGES = [['На экране видна головоломка..', 'серебряный ключ уже у вас!'], ['Может стоит взгянуть в телескоп..', 'золотой ключ уже у вас!'], ['Под кроватью такой бардак, словно лабиринт..', 'железный ключ уже у вас!']]
+
 
 def show_message(screen, sms): #выводит на экран сообщение при взаимодействии
     font = pygame.font.Font(None, 25)
@@ -546,7 +548,7 @@ def start():
         screen.blit(carpet, (180, 350))
         screen.blit(books, (80, 100))
 
-        door = pygame.draw.rect(screen, 'black', [30, 500, 300, 100])
+        #door = pygame.draw.rect(screen, (84, 44, 33), [620, 400, 20, 140])
 
 
         # font = pygame.font.Font(None, 25)
@@ -561,23 +563,25 @@ def start():
         #
         # # Рисуем прямоугольник
         # pygame.draw.rect(screen, 'black', [20, 20, 250, 100])
+        # if pygame.sprite.spritecollideany(player, door):
+        #     print(1)
 
         if not player.end:
             all_sprite_list.update()
             all_sprite_list.draw(screen)
             if telescope.k == 1:
-                show_message(screen, 'tele')
+                show_message(screen, MESSAGES[1][0])
             if bed.k == 1:
-                show_message(screen, 'bed')
+                show_message(screen, MESSAGES[2][0])
             if comp.k == 1:
-                show_message(screen, 'comp')
+                show_message(screen, MESSAGES[0][0])
             if telescope.k == 3 and telescope.mess == 1:
                 print(telescope.mess)
-                show_message(screen, 'tele1')
+                show_message(screen, MESSAGES[1][1])
             if bed.k == 3 and bed.mess == 1:
-                show_message(screen, 'bed1')
+                show_message(screen, MESSAGES[2][1])
             if comp.k == 3 and comp.mess == 1:
-                show_message(screen, 'comp1')
+                show_message(screen, MESSAGES[0][1])
         else:
             pygame.quit()
             return True

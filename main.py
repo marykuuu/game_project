@@ -2,6 +2,7 @@ import sys
 import pygame
 import os
 
+
 def terminate():
     pygame.quit()
     sys.exit()
@@ -34,5 +35,7 @@ def cut_sheet(sheet, columns, rows):
             frames.append(sheet.subsurface(pygame.Rect(
                 frame_location, rect.size)))
     return frames
+
+
 
 

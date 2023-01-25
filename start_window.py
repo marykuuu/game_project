@@ -33,5 +33,5 @@ def start_screen():
                 return 'play'
         pygame.display.flip()
 
-
-start_screen()
+if __name__ == '__main__':
+    print(start_screen())
