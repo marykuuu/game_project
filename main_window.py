@@ -16,6 +16,10 @@ up = False
 down = False
 pos = 0
 
+IRON_KEY = False
+SILVER_KEY = False
+GOLDEN_KEY = False
+
 
 def show_message(screen, sms): #выводит на экран сообщение при взаимодействии
     font = pygame.font.Font(None, 25)
@@ -165,13 +169,19 @@ class Furniture(pygame.sprite.Sprite):
             if self.k == 0:
                 self.k = 1
             elif self.k == 1:
-                if self.name == 'comp':
+                if self.name == 'comp':#silver
                     result = puzzle()
-                elif self.name == 'tele':
+                    if result == 1:
+                        SILVER_KEY = True
+                elif self.name == 'tele':#golden
                     result = memory_stars()
-                elif self.name == 'bed':
+                    if result == 1:
+                        GOLDEN_KEY = True
+                elif self.name == 'bed':#iron
                     result = 1
-                    pass
+                    if result == 1:
+                        IRON_KEY = True
+
                 if result == 1:
                     self.flag = False
                     self.k = 2
@@ -535,6 +545,8 @@ def start():
         screen.blit(background_image, (0, 0))
         screen.blit(carpet, (180, 350))
         screen.blit(books, (80, 100))
+
+        door = pygame.draw.rect(screen, 'black', [30, 500, 300, 100])
 
 
         # font = pygame.font.Font(None, 25)
