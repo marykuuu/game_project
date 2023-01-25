@@ -76,6 +76,9 @@ def memory_stars():
 
         if score == 5:
             waitingForInput = True
+            infoSurf = BASICFONT.render('Поздравляю!! Вы получили ключ!', 1, DARKGRAY)
+            infoRect = infoSurf.get_rect()
+            infoRect.topleft = (10, height - 25)
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
@@ -182,6 +185,7 @@ def drawButtons():
     pygame.draw.rect(DISPLAYSURF, BLUE,   BLUERECT)
     pygame.draw.rect(DISPLAYSURF, RED,    REDRECT)
     pygame.draw.rect(DISPLAYSURF, GREEN,  GREENRECT)
+
 
 
 def gameOverAnimation(color=WHITE, animationSpeed=50):
