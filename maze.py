@@ -1,4 +1,5 @@
 import pygame
+from main import load_image, terminate
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -66,7 +67,9 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = y
 
 
-def start():
+
+
+def labirint():
     pygame.init()
     screen = pygame.display.set_mode([screen_width, screen_height])
     pygame.display.set_caption('Maze')
@@ -177,9 +180,11 @@ def start():
     # done = False
 
     while True:
+        #if not player.end:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pygame.quit()
+                terminate()
                 return False
 
             elif event.type == pygame.KEYDOWN:
@@ -204,15 +209,21 @@ def start():
 
             screen.fill(white)
 
-            if not player.end:
-                all_sprite_list.update()
-                all_sprite_list.draw(screen)
-            else:
-                pygame.quit()
-                return True
+            all_sprite_list.update()
+            all_sprite_list.draw(screen)
+        # else:
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             terminate()
+        #             return False
+        #         if event.type == pygame.KEYDOWN:
+        #             if event.key == pygame.K_SPACE:
+        #                 return 1
+
 
         pygame.display.flip()
         clock.tick(24)
 
     # pygame.quit()
-start()
+
+print(labirint())

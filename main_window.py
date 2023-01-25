@@ -2,6 +2,7 @@ import pygame
 from main import terminate, load_image, cut_sheet
 from slidepuzzle import puzzle
 from game import memory_stars
+#from maze import labirint
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -180,7 +181,8 @@ class Bed(pygame.sprite.Sprite):
 
     def contact(self):
         if self.flag:
-            # мини-игра
+            # if labirint() == 1:
+            #     self.flag = False
             pass
         if not self.flag:
             # делаем чтобы не тыкалось
@@ -249,6 +251,45 @@ class Mini_table(pygame.sprite.Sprite):
             # делаем чтобы не тыкалось
             pass
 
+class Door1(pygame.sprite.Sprite):
+
+    def __init__(self, x, y, flag, img='door.png'):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (50, 120))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = flag
+
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
+
+class Door2(pygame.sprite.Sprite):
+
+    def __init__(self, x, y, flag, img='door.png'):
+        super().__init__()
+        self.image = load_image(img)
+        self.image = pygame.transform.scale(self.image, (300, 50))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect.x = x
+        self.rect.y = y
+        self.flag = flag
+
+    def contact(self):
+        if self.flag:
+            # мини-игра
+            pass
+        if not self.flag:
+            # делаем чтобы не тыкалось
+            pass
 
 def start():
     pygame.init()
@@ -258,6 +299,8 @@ def start():
 
     all_sprite_list = pygame.sprite.Group()
     wall_list = pygame.sprite.Group()
+
+    tablee = 0
 
     # walk_down, walk_up, walk_right, walk_left = [], [], [], []
     # pictures = cut_sheet(load_image('player.png'), 7, 4)
@@ -295,6 +338,8 @@ def start():
     comp = Comp(490, 160, True)
     table = Table(420, 210, True)
     minitable = Mini_table(160, 200, True)
+    # door_out = Door1(600, 405, True)
+    # door_in = Door2(400, 600, True)
     #img = pygame.transform.scale(walk_up[0], (150, 200))
     player = Player(360, 430, load_image('player.png'), 7, 4)
     player.walls = wall_list
@@ -303,6 +348,8 @@ def start():
     all_sprite_list.add(table)
     all_sprite_list.add(comp)
     all_sprite_list.add(minitable)
+    # all_sprite_list.add(door_out)
+    # all_sprite_list.add(door_in)
 
     carpet = load_image('carpet.png')
     carpet = pygame.transform.scale(carpet, (370, 200))
@@ -335,11 +382,17 @@ def start():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if pygame.sprite.collide_rect(player, table):
-                        #print(1)
+                        tablee = 1
                         table.contact()
+                        print('tab')
+
+                        #table.contact()
                     if pygame.sprite.collide_rect(player, telescope):
-                        #print(1)
-                        telescope.contact()
+                        print('tele')
+                        #telescope.contact()
+                    # if pygame.sprite.collide_rect(player, bed):
+                    #     print('bed')
+                    #     bed.contact()
 
 
         key = pygame.key.get_pressed()
@@ -434,6 +487,14 @@ def start():
         screen.blit(background_image, (0, 0))
         screen.blit(carpet, (180, 350))
         screen.blit(books, (80, 100))
+        if tablee ==1:
+            left, top = 10, 10
+            BASICFONT = pygame.font.Font('freesansbold.ttf', 20)
+
+            # pygame.draw.rect(DISPLAYSURF, TILECOLOR, (left + adjx, top + adjy, TILESIZE, TILESIZE))
+            textSurf = BASICFONT.render(str(10204204), True, (100, 255, 255))
+            textRect = textSurf.get_rect()
+            screen.blit(textSurf, textRect)
 
         if not player.end:
             all_sprite_list.update()
