@@ -13,15 +13,15 @@ BOARDWIDTH = 4  # number of columns in the board
 BOARDHEIGHT = 4  # number of rows in the board
 TILESIZE = 80
 WINDOWWIDTH = 640
-WINDOWHEIGHT = 480
+WINDOWHEIGHT = 640
 FPS = 30
 BLANK = None
 
 #                 R    G    B
 BLACK = (0, 0, 0)
-WHITE = (100, 255, 255)
-BRIGHTBLUE = (0, 50, 255)
-DARKTURQUOISE = (3, 54, 73)
+WHITE = (56, 23, 123)
+BRIGHTBLUE = (160,135,210)
+DARKTURQUOISE = (120, 139, 226)
 GREEN = (0, 204, 0)
 
 BGCOLOR = DARKTURQUOISE
@@ -55,7 +55,7 @@ def puzzle():
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    pygame.display.set_caption('Slide Puzzle')
+    pygame.display.set_caption('puzzle')
     BASICFONT = pygame.font.Font('freesansbold.ttf', BASICFONTSIZE)
 
     IMAGE = [el for el in cut_sheet(pygame.transform.scale(load_image('meowww.jpg'), (320, 320)), BOARDWIDTH, BOARDHEIGHT)]
@@ -73,7 +73,7 @@ def puzzle():
 
     while True:  # main game loop
         slideTo = None  # the direction, if any, a tile should slide
-        msg = 'Click tile or press arrow keys to slide.'  # contains the message to show in the upper left corner.
+        msg = 'Соберите картинку, чтобы получить ключ'  # contains the message to show in the upper left corner.
         if mainBoard == SOLVEDBOARD:
             msg = 'Головоломка разгадана! Вы получили ЖЕЛЕЗНЫЙ ключ!'
             solved = True

@@ -88,8 +88,6 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.rect.top = block.rect.bottom
 
-            # if pygame.sprite.spritecollide(self, self.exit, True):
-            #     self.end = True
 
     def cut_sheet(self, sheet, columns, rows):
         rect = pygame.Rect(0, 0, sheet.get_width() // columns,
@@ -165,6 +163,7 @@ class Wall(pygame.sprite.Sprite):
 
 class Furniture(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, img, name):
+
         super().__init__()
         self.image = load_image(img)
         self.image = pygame.transform.scale(self.image, (width, height))
@@ -178,6 +177,7 @@ class Furniture(pygame.sprite.Sprite):
         self.mess = -1
 
     def contact(self):
+        global GOLDEN_KEY, SILVER_KEY, IRON_KEY
 
         if self.flag:
             if self.k == 0:
@@ -208,53 +208,10 @@ class Furniture(pygame.sprite.Sprite):
 
 
 
-class Telescope(pygame.sprite.Sprite):
-
-    def __init__(self, x, y, flag, img='tele.png'):
-        super().__init__()
-        self.image = load_image(img)
-        self.image = pygame.transform.scale(self.image, (100, 200))
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = x
-        self.rect.y = y
-        self.flag = flag
-        self.k = 0
-
-    def contact(self, screen):
-        if self.flag:
-            if self.k == 0:
-                show_message(screen, 'miyy')
-                self.k += 1
-            elif self.k == 1:
-                if memory_stars() == 1:
-                    self.flag = False
-                    self.k += 1
-        if not self.flag:
-            # делаем чтобы не тыкалось
-            pass
 
 
-class Bed(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, flag, img='bed.png'):
-        super().__init__()
-        self.image = load_image(img)
-        self.image = pygame.transform.scale(self.image, (200, 300))
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = x
-        self.rect.y = y
-        self.flag = flag
 
-    def contact(self):
-        if self.flag:
-            # if labirint() == 1:
-            #     self.flag = False
-            pass
-        if not self.flag:
-            # делаем чтобы не тыкалось
-            pass
 
 
 class Table(pygame.sprite.Sprite):
@@ -278,25 +235,7 @@ class Table(pygame.sprite.Sprite):
             pass
 
 
-class Comp(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, flag, img='comp.png'):
-        super().__init__()
-        self.image = load_image(img)
-        self.image = pygame.transform.scale(self.image, (130, 120))
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect.x = x
-        self.rect.y = y
-        self.flag = flag
-
-    def contact(self):
-        if self.flag:
-            # мини-игра
-            pass
-        if not self.flag:
-            # делаем чтобы не тыкалось
-            pass
 
 
 class Mini_table(pygame.sprite.Sprite):
@@ -321,23 +260,24 @@ class Mini_table(pygame.sprite.Sprite):
 
 class Door1(pygame.sprite.Sprite):
 
-    def __init__(self, x, y, flag, img='door.png'):
+    def __init__(self, x, y, wight, height, img='door1.jpg'):
         super().__init__()
         self.image = load_image(img)
-        self.image = pygame.transform.scale(self.image, (50, 120))
+        self.image = pygame.transform.scale(self.image, (wight, height))# 40 115
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.rect.x = x
         self.rect.y = y
-        self.flag = flag
+        self.flag = False
+        self.mess = -1
+
 
     def contact(self):
-        if self.flag:
-            # мини-игра
-            pass
-        if not self.flag:
-            # делаем чтобы не тыкалось
-            pass
+        if not(IRON_KEY and GOLDEN_KEY and SILVER_KEY):
+            self.mess = -self.mess
+        # else:
+        #     self.flag = True
+
 
 class Door2(pygame.sprite.Sprite):
 
@@ -406,8 +346,8 @@ def start():
     comp = Furniture(490, 160, 130, 120, 'comp.png', 'comp')
     table = Table(420, 210, True)
     minitable = Mini_table(160, 200, True)
-    # door_out = Door1(600, 405, True)
-    # door_in = Door2(400, 600, True)
+    door_out = Door1(620, 405, 20, 115)
+    door_in = Door1(365, 620, 150, 20)
     #img = pygame.transform.scale(walk_up[0], (150, 200))
     player = Player(360, 430, load_image('player.png'), 7, 4)
     player.walls = wall_list
@@ -416,8 +356,8 @@ def start():
     all_sprite_list.add(table)
     all_sprite_list.add(comp)
     all_sprite_list.add(minitable)
-    # all_sprite_list.add(door_out)
-    # all_sprite_list.add(door_in)
+    all_sprite_list.add(door_out)
+    all_sprite_list.add(door_in)
 
     carpet = load_image('carpet.png')
     carpet = pygame.transform.scale(carpet, (370, 200))
@@ -429,6 +369,7 @@ def start():
     clock = pygame.time.Clock()
 
     while True:
+        pygame.display.set_caption('game')
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -449,6 +390,8 @@ def start():
                 player.animation(left, right, up, down)
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
+                    # if door_out.flag == True:
+                    #     return 1
                     if pygame.sprite.collide_rect(player, comp):
                         comp.contact()
                         print('tab')
@@ -467,6 +410,14 @@ def start():
                         bed.contact()
                     else:
                         bed.k = 0
+                    if pygame.sprite.collide_rect(player, door_out):
+                        print(SILVER_KEY, GOLDEN_KEY,  IRON_KEY)
+                        if (SILVER_KEY and GOLDEN_KEY and IRON_KEY):
+                            return 1
+                        else:
+                            door_out.contact()
+                    else:
+                        door_out.mess = -1
 
 
         key = pygame.key.get_pressed()
@@ -478,7 +429,7 @@ def start():
             down = False
             player.animation(left, right, up, down)
 
-        elif key[pygame.K_LEFT]:
+        if key[pygame.K_LEFT]:
             player.step_x = -5
             left = True
             right = False
@@ -486,7 +437,7 @@ def start():
             down = False
             player.animation(left, right, up, down)
 
-        elif key[pygame.K_UP]:
+        if key[pygame.K_UP]:
             player.step_y = -5
             left = False
             right = False
@@ -494,7 +445,7 @@ def start():
             down = False
             player.animation(left, right, up, down)
 
-        elif key[pygame.K_DOWN]:
+        if key[pygame.K_DOWN]:
             player.step_y = 5
             left = False
             right = False
@@ -583,6 +534,8 @@ def start():
         if not player.end:
             all_sprite_list.update()
             all_sprite_list.draw(screen)
+            # if door_out.mess == 1:
+            #     show_message(screen, 'НЕДОСТАТОЧНО КЛЮЧЕЙ')
             if telescope.k == 1:
                 show_message(screen, MESSAGES[1][0])
             if bed.k == 1:
@@ -596,9 +549,9 @@ def start():
                 show_message(screen, MESSAGES[2][1])
             if comp.k == 3 and comp.mess == 1:
                 show_message(screen, MESSAGES[0][1])
+
         else:
-            pygame.quit()
-            return True
+            terminate()
 
 
 #мяршрршршщр

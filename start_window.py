@@ -30,7 +30,7 @@ def start_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONDOWN:#event.type == pygame.KEYDOWN or
                 return 'play'
         pygame.display.flip()
 

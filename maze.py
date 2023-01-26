@@ -45,11 +45,10 @@ class MAN(pygame.sprite.Sprite):
                 self.end = True
 
 
-class Exit(pygame.sprite.Sprite):
+class Key(pygame.sprite.Sprite):
     def __init__(self, x, y, img='key.png'):
         super().__init__()
-        self.image = pygame.image.load(img).convert_alpha()
-        self.image.set_colorkey((255, 255, 255))
+        self.image = load_image(img)
         self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -167,7 +166,7 @@ def labirint():
     exit_list = pygame.sprite.Group()
     exit_coords = [[540, 0]]
     for coord in exit_coords:
-        exit = Exit(coord[0], coord[1])
+        exit = Key(coord[0], coord[1])
         exit_list.add(exit)
         all_sprite_list.add(exit)
 
