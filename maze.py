@@ -211,14 +211,14 @@ def labirint():
 
             all_sprite_list.update()
             all_sprite_list.draw(screen)
-        # else:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             terminate()
-        #             return False
-        #         if event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_SPACE:
-        #                 return 1
+        else:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    terminate()
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        return 1
 
 
         pygame.display.flip()

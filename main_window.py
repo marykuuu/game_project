@@ -2,7 +2,7 @@ import pygame
 from main import terminate, load_image
 from slidepuzzle import puzzle
 from game import memory_stars
-#from maze import labirint
+from maze import labirint
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -20,18 +20,30 @@ IRON_KEY = False
 SILVER_KEY = False
 GOLDEN_KEY = False
 
-MESSAGES = [['На экране видна головоломка..', 'серебряный ключ уже у вас!'], ['Может стоит взгянуть в телескоп..', 'золотой ключ уже у вас!'], ['Под кроватью такой бардак, словно лабиринт..', 'железный ключ уже у вас!']]
+MESSAGES = [[('Кажется, на экране', 'видна головоломка..'), 'серебряный ключ уже у вас!'], ['Может взгянуть в телескоп..?', 'золотой ключ уже у вас!'], [('Под кроватью такой бардак,', 'словно лабиринт..'), 'железный ключ уже у вас!']]
 
 
-def show_message(screen, sms): #выводит на экран сообщение при взаимодействии
-    font = pygame.font.Font(None, 25)
-    pygame.draw.rect(screen, 'black', [30, 500, 300, 100])
+def show_message(screen, sms, key='small'): #выводит на экран сообщение при взаимодействии
+    if key == 'small':
+        font = pygame.font.Font(None, 30)
+        pygame.draw.rect(screen, (177, 162, 219), [30, 500, 300, 100])
 
-    # Рисуем текст. "True" означает использовать сглаживание
-    # Black -- цвет текста. Следующая строка создает образ текста
-    # но не рисует его на экране.
-    text = font.render(sms, True, 'white')
-    screen.blit(text, [35, 505])
+        # Рисуем текст. "True" означает использовать сглаживание
+        # Black -- цвет текста. Следующая строка создает образ текста
+        # но не рисует его на экране.
+        text = font.render(sms, True, 'white')
+        screen.blit(text, [35, 535])
+    elif key == 'big':
+        font = pygame.font.Font(None, 30)
+        pygame.draw.rect(screen, (177, 162, 219), [30, 500, 300, 100])
+        coord = 530
+        for el in sms:
+
+
+            text = font.render(el, True, 'white')
+            screen.blit(text, [35, coord])
+            coord += 20
+
 
 
 
@@ -180,9 +192,11 @@ class Furniture(pygame.sprite.Sprite):
                     if result == 1:
                         GOLDEN_KEY = True
                 elif self.name == 'bed':#iron
-                    result = 1
+                    result = labirint()
                     if result == 1:
                         IRON_KEY = True
+                else:
+                    result = 0
 
                 if result == 1:
                     self.flag = False
@@ -572,9 +586,9 @@ def start():
             if telescope.k == 1:
                 show_message(screen, MESSAGES[1][0])
             if bed.k == 1:
-                show_message(screen, MESSAGES[2][0])
+                show_message(screen, MESSAGES[2][0], key='big')
             if comp.k == 1:
-                show_message(screen, MESSAGES[0][0])
+                show_message(screen, MESSAGES[0][0], key='big')
             if telescope.k == 3 and telescope.mess == 1:
                 print(telescope.mess)
                 show_message(screen, MESSAGES[1][1])

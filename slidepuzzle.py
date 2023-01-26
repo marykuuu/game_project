@@ -3,9 +3,10 @@
 # http://inventwithpython.com/pygame
 # Released under a "Simplified BSD" license
 
-import pygame, sys, random
+import pygame
+import random
 from pygame.locals import *
-from main import cut_sheet, load_image
+from main import cut_sheet, load_image, terminate
 
 # Create the constants (go ahead and experiment with different values)
 BOARDWIDTH = 4  # number of columns in the board
@@ -133,9 +134,7 @@ def puzzle():
 
 
 
-def terminate():
-    pygame.quit()
-    sys.exit()
+
 
 
 def checkForQuit():
