@@ -4,8 +4,8 @@ from main import load_image, terminate
 black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 128, 0)
-screen_width = 780
-screen_height = 720
+screen_width = 640
+screen_height = 640
 
 
 class MAN(pygame.sprite.Sprite):
@@ -46,11 +46,11 @@ class MAN(pygame.sprite.Sprite):
 
 
 class Exit(pygame.sprite.Sprite):
-    def __init__(self, x, y, img='exit.png'):
+    def __init__(self, x, y, img='key.png'):
         super().__init__()
         self.image = pygame.image.load(img).convert_alpha()
         self.image.set_colorkey((255, 255, 255))
-        self.image = pygame.transform.scale(self.image, (60, 60))
+        self.image = pygame.transform.scale(self.image, (80, 60))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.x = y
@@ -171,18 +171,24 @@ def labirint():
         exit_list.add(exit)
         all_sprite_list.add(exit)
 
-    player = MAN(300, 660)
+    player = MAN(300, 580)
     player.walls = wall_list
     all_sprite_list.add(player)
     player.exit = exit_list
 
     clock = pygame.time.Clock()
-    # done = False
+    done = True
 
-    while True:
-        #if not player.end:
+    while done:
 
         for event in pygame.event.get():
+
+            if player.end:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        done = False
+                        return 1
+
             if event.type == pygame.QUIT:
                 terminate()
                 return False
@@ -211,18 +217,13 @@ def labirint():
 
             all_sprite_list.update()
             all_sprite_list.draw(screen)
-        # else:
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             terminate()
-        #             return False
-        #         if event.type == pygame.KEYDOWN:
-        #             if event.key == pygame.K_SPACE:
-        #                 return 1
 
 
         pygame.display.flip()
         clock.tick(24)
+
+    if not done:
+        return 1
 
     # pygame.quit()
 
