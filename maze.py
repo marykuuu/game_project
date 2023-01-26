@@ -227,4 +227,5 @@ def labirint():
 
     # pygame.quit()
 
-print(labirint())
+if __name__ == '__main__':
+    print(labirint())
