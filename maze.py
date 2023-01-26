@@ -50,7 +50,7 @@ class Exit(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load(img).convert_alpha()
         self.image.set_colorkey((255, 255, 255))
-        self.image = pygame.transform.scale(self.image, (80, 60))
+        self.image = pygame.transform.scale(self.image, (60, 60))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.x = y
@@ -140,8 +140,8 @@ def labirint():
         [480, 540, 1, 60],
         [480, 540, 60, 1],
         [540, 480, 1, 60],
-        [420, 480, 120, 1],
-        [420, 360, 1, 120],
+        [0, 640, 640, 1],
+        [640, 0, 1, 640],
         [600, 540, 120, 1],
         [600, 420, 1, 120],
         [600, 420, 120, 1],
@@ -184,6 +184,7 @@ def labirint():
         for event in pygame.event.get():
 
             if player.end:
+                # pygame.draw.rect(screen, black, [])
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         done = False
